@@ -68,6 +68,7 @@ void GameScene::Update() {
 		audio_->StopWave(voiceHandle_);
 	}
 
+#ifdef _DEBUG
 	//デバックテキストの表示
 	ImGui::Begin("Debug1");
 	ImGui::Text("Kamata Tarou %d.%d.%d" , 2050 , 12 , 31);
@@ -78,6 +79,7 @@ void GameScene::Update() {
 	ImGui::SliderFloat3("SliderFloat3" , inputFloat3 , 0.0f , 1.0f);
 
 	ImGui::End();
+#endif
 
 	//デバックカメラの更新
 	debugCamera_->Update();
