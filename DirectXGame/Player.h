@@ -3,7 +3,7 @@
 #include "WorldTransform.h"
 #include "Input.h"
 #include "AffineMatrix.h"
-
+#include "PlayerBullet.h"
 
 class Player {
 public:
@@ -16,6 +16,8 @@ public:
 	//描画
 	void Draw(ViewProjection &viewProjection);
 
+	void Attack();
+
 private:
 	WorldTransform worldTransform_;
 
@@ -27,5 +29,8 @@ private:
 	Input *input_ = nullptr;
 
 	float inputFloat3[3] = {0, 0, 0};
+
+	//弾
+	PlayerBullet *bullet_ = nullptr;
 
 };
