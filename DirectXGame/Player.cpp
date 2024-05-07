@@ -51,9 +51,12 @@ void Player::Update() {
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_ , worldTransform_.rotation_ , worldTransform_.translation_);
 
+	inputFloat3[0] = worldTransform_.translation_.x;
+	inputFloat3[1] = worldTransform_.translation_.y;
+	inputFloat3[2] = worldTransform_.translation_.z;
 
 	ImGui::Begin("Debug");
-	/*ImGui::SliderFloat3("Player" ,  , -100.0f , 100.0f);*/
+	ImGui::SliderFloat3("Player" , (float*)&worldTransform_.translation_.x , -50.0f , 50.0f);
 	ImGui::End();
 
 }

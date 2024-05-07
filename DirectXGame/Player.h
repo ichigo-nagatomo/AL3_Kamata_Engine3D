@@ -26,4 +26,6 @@ private:
 	//キーボード
 	Input *input_ = nullptr;
 
+	float inputFloat3[3] = {0, 0, 0};
+
 };
