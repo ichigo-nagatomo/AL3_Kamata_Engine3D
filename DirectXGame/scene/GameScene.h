@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "Player.h"
 #include "DebugCamera.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -61,6 +62,9 @@ private: // メンバ変数
 
 	//自キャラ
 	Player *player_ = nullptr;
+
+	//敵
+	Enemy *enemy_ = nullptr;
 
 	DebugCamera *debugCamera_ = nullptr;
 
