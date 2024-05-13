@@ -11,10 +11,26 @@ void Enemy::Init(Model *model) {
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_.y = 2.0f;
+	worldTransform_.translation_.z = 5.0f;
 }
 
 void Enemy::Update() {
-	worldTransform_.translation_.z -= 0.1f;
+	
+	switch (phase_) {
+		case Phase::Approach:
+		default:
+			worldTransform_.translation_.z -= 0.1f;
+
+			if (worldTransform_.translation_.z < 0.0f) {
+				phase_ = Phase::Leave;
+			}
+			break;
+
+		case Phase::Leave:
+			worldTransform_.translation_.x += 0.1f;
+			worldTransform_.translation_.y += 0.1f;
+			break;
+	}
 
 	worldTransform_.UpdateMatrix();
 }
