@@ -4,9 +4,14 @@
 #include "Input.h"
 #include "AffineMatrix.h"
 #include "PlayerBullet.h"
+#include <list>
 
 class Player {
 public:
+	Player();
+
+	~Player();
+
 	//初期化
 	void Init(Model *model , uint32_t textureHandle);
 
@@ -31,6 +36,6 @@ private:
 	float inputFloat3[3] = {0, 0, 0};
 
 	//弾
-	PlayerBullet *bullet_ = nullptr;
+	std::list<PlayerBullet*> bullets_;
 
 };
