@@ -67,6 +67,14 @@ void Player::Update() {
 		bullet->Update();
 	}
 
+	bullets_.remove_if([](PlayerBullet *bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
 	const float kMoveLimitX = 30.0f;
 	const float kMoveLimitY = 10.0f;
 
@@ -93,8 +101,13 @@ void Player::Update() {
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
+		const float kBulletSpeed = 1.0f;
+		Vector3 velocity(0 , 0 , kBulletSpeed);
+
+		velocity = TransformNormal(velocity , worldTransform_.matWorld_);
+
 		PlayerBullet *newBullet = new PlayerBullet();
-		newBullet->Init(model_ , worldTransform_.translation_);
+		newBullet->Init(model_ , worldTransform_.translation_, velocity);
 
 		bullets_.push_back(newBullet);
 	}

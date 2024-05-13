@@ -5,6 +5,7 @@
 #include "AffineMatrix.h"
 #include "PlayerBullet.h"
 #include <list>
+#include "Function.h"
 
 class Player {
 public:
