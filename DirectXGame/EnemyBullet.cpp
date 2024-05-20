@@ -12,6 +12,8 @@ void EnemyBullet::Init(Model *model , const Vector3 &pos , const Vector3& veloci
 	worldTransform_.translation_ = pos;
 
 	velocity_ = velocity;
+
+	radius_ = 1.0f;
 }
 
 void EnemyBullet::Update() {
@@ -28,4 +30,18 @@ void EnemyBullet::Update() {
 
 void EnemyBullet::Draw(const ViewProjection &viewProjection) {
 	model_->Draw(worldTransform_ , viewProjection , textureHandle_);
+}
+
+Vector3 EnemyBullet::GetWorldPos() {
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+void EnemyBullet::OnCollision() {
+	isDead_ = true;
 }

@@ -36,6 +36,12 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4 &matrix) {
 	return result;
 }
 
+float AtoBLength(const Vector3 &v1, const Vector3 &v2) {
+	Vector3 saveVec3 = Subtract(v1 , v2);
+	float length = sqrtf(saveVec3.x * saveVec3.x + saveVec3.y * saveVec3.y + saveVec3.z * saveVec3.z);
+	return length;
+}
+
 Vector3 Normalize(const Vector3 &v) {
 	Vector3 result;
 	float length = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);

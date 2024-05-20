@@ -44,6 +44,8 @@ void GameScene::Update() {
 		enemy_->Update();
 	}
 
+	CheckAllCollisions();
+
 #ifdef _DEBUG
 	/*if (input_->TriggerKey(DIK_SPACE)) {
 		isDebugCamaraActive_ = true;
@@ -110,4 +112,64 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+	Vector3 posA , posB;
+
+	const  std::list<PlayerBullet *> &playerBullets = player_->GetBullets();
+	const  std::list<EnemyBullet *> &enemyBullets = enemy_->GetBullets();
+
+	//PtoEB
+#pragma region
+	posA = player_->GetWorldPos();
+
+	for (EnemyBullet *bullet : enemyBullets) {
+		posB = bullet->GetWorldPos();
+
+		float length = AtoBLength(posA , posB);
+
+		if (length <= player_->GetRadius() + bullet->GetRadius()) {
+			player_->OnCollision();
+
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+	//EtoPB
+#pragma region
+	posA = enemy_->GetWorldPos();
+
+	for (PlayerBullet *bullet : playerBullets) {
+		posB = bullet->GetWorldPos();
+
+		float length = AtoBLength(posA , posB);
+
+		if (length <= enemy_->GetRadius() + bullet->GetRadius()) {
+			enemy_->OnCollision();
+
+			bullet->OnCollision();
+		}
+	}
+#pragma endregion
+
+	//PBtoEB
+#pragma region
+	for (PlayerBullet *playerBullet : playerBullets) {
+		posA = playerBullet->GetWorldPos();
+		for (EnemyBullet *enemyBullet : enemyBullets) {
+			posB = enemyBullet->GetWorldPos();
+
+			float length = AtoBLength(posA , posB);
+
+			if (length <= playerBullet->GetRadius() + enemyBullet->GetRadius()) {
+				playerBullet->OnCollision();
+
+				enemyBullet->OnCollision();
+			}
+		}
+	}
+#pragma endregion
+
 }

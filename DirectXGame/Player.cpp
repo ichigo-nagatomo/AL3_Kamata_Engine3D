@@ -25,6 +25,9 @@ void Player::Init(Model *model , uint32_t textureHandle) {
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
+	worldTransform_.translation_ = {0.0f, 0.0f, -10.0f};
+
+	radius_ = 1.5f;
 }
 
 void Player::Update() {
@@ -135,4 +138,8 @@ void Player::Draw(ViewProjection& viewProjection) {
 #ifdef _DEBUG
 	
 #endif
+}
+
+void Player::OnCollision() {
+	
 }

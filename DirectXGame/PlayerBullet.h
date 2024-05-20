@@ -13,6 +13,11 @@ public:
 
 	void Draw(const ViewProjection &viewProjection);
 
+	Vector3 GetWorldPos();
+	float GetRadius() { return radius_; }
+
+	void OnCollision();
+
 private:
 	WorldTransform worldTransform_;
 
@@ -28,6 +33,7 @@ private:
 	bool isDead_ = false;
 
 public:
+	float radius_;
 	bool IsDead() const { return isDead_; }
 };
 

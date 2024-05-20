@@ -13,8 +13,15 @@ public:
 
 	void Draw(const ViewProjection &viewProjection);
 
+	Vector3 GetWorldPos();
+	float GetRadius() { return radius_; }
+
+	void OnCollision();
+
 private:
 	WorldTransform worldTransform_;
+
+	float radius_;
 
 	Model *model_ = nullptr;
 

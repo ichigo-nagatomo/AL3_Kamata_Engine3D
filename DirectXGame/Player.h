@@ -26,9 +26,15 @@ public:
 
 
 	Vector3 GetWorldPos();
+	float GetRadius() { return radius_; }
+
+	void OnCollision();
+	const std::list<PlayerBullet *> &GetBullets() const { return bullets_; }
 
 private:
 	WorldTransform worldTransform_;
+
+	float radius_;
 
 	Model *model_ = nullptr;
 

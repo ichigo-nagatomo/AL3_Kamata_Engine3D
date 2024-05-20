@@ -32,9 +32,14 @@ public:
 	void SetPlayer(Player *player) { player_ = player; }
 
 	Vector3 GetWorldPos();
+	float GetRadius() { return radius_; }
 
+	void OnCollision();
+	const std::list<EnemyBullet *> &GetBullets() const { return bullets_; }
 private:
 	WorldTransform worldTransform_;
+
+	float radius_;
 
 	Model *model_ = nullptr;
 

@@ -23,6 +23,7 @@ void Enemy::Init(Model *model) {
 
 	worldTransform_.translation_ = {5.0f, 2.0f, 5.0f};
 
+	radius_ = 1.5f;
 }
 
 void Enemy::Update() {
@@ -30,7 +31,7 @@ void Enemy::Update() {
 	switch (phase_) {
 		case Phase::Approach:
 		default:
-			worldTransform_.translation_.z -= 0.1f;
+			worldTransform_.translation_.z -= 0.02f;
 
 			/*Fire();*/
 			/*ApproachInit();*/
@@ -114,4 +115,8 @@ void Enemy::Draw(ViewProjection &viewProjection) {
 	for (EnemyBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
+}
+
+void Enemy::OnCollision() {
+	
 }
