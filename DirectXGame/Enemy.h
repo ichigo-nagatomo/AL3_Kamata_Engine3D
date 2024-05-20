@@ -3,6 +3,8 @@
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
 
+class Player;
+
 enum class Phase {
 	Approach,
 	Leave,
@@ -26,6 +28,11 @@ public:
 
 	void ApproachUpdate();
 
+
+	void SetPlayer(Player *player) { player_ = player; }
+
+	Vector3 GetWorldPos();
+
 private:
 	WorldTransform worldTransform_;
 
@@ -39,6 +46,9 @@ private:
 	std::list<EnemyBullet*> bullets_;
 
 	int32_t isShootTime_ = 0;
+
+
+	Player *player_ = nullptr;
 };
 
 

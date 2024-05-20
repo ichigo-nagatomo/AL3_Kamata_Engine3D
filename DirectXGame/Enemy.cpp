@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "cassert"
 #include "TextureManager.h"
+#include "Player.h"
 
 Enemy::Enemy() {
 
@@ -21,6 +22,7 @@ void Enemy::Init(Model *model) {
 	worldTransform_.Initialize();
 
 	worldTransform_.translation_ = {5.0f, 2.0f, 5.0f};
+
 }
 
 void Enemy::Update() {
@@ -62,10 +64,15 @@ void Enemy::Update() {
 }
 
 void Enemy::Fire() {
-	const float kBulletSpeed = 0.5f;
-	Vector3 velocity(0 , 0 , kBulletSpeed);
+	assert(player_);
 
-	velocity = TransformNormal(velocity , worldTransform_.matWorld_);
+	const float kBulletSpeed = 1.0f;
+
+	Vector3 subVec3(Subtract(player_->GetWorldPos(), GetWorldPos()));
+
+	subVec3 = Normalize(subVec3);
+
+	Vector3 velocity = MultiplyVec3(kBulletSpeed, subVec3);
 
 	EnemyBullet *newBullet = new EnemyBullet();
 	newBullet->Init(model_ , worldTransform_.translation_, velocity);
@@ -88,6 +95,16 @@ void Enemy::ApproachUpdate() {
 
 		ApproachInit();
 	}
+}
+
+Vector3 Enemy::GetWorldPos() {
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
 }
 
 void Enemy::Draw(ViewProjection &viewProjection) {

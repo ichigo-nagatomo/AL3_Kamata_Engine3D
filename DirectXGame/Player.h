@@ -24,6 +24,9 @@ public:
 
 	void Attack();
 
+
+	Vector3 GetWorldPos();
+
 private:
 	WorldTransform worldTransform_;
 
