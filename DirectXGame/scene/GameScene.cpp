@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete player_;
 	delete enemy_;
 	delete debugCamera_;
+	delete modelSkydome_;
 }
 
 void GameScene::Initialize() {
@@ -35,9 +36,16 @@ void GameScene::Initialize() {
 
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+	skyModeModel_ = Model::CreateFromOBJ("skydome" , true);
+	modelSkydome_ = new Skydome();
+	modelSkydome_->Init(skyModeModel_);
+	
 }
 
 void GameScene::Update() {
+	modelSkydome_->Update();
+
 	player_->Update();
 
 	if (enemy_) {
@@ -47,9 +55,9 @@ void GameScene::Update() {
 	CheckAllCollisions();
 
 #ifdef _DEBUG
-	/*if (input_->TriggerKey(DIK_SPACE)) {
+	if (input_->TriggerKey(DIK_C)) {
 		isDebugCamaraActive_ = true;
-	}*/
+	}
 #endif
 
 	if (isDebugCamaraActive_) {
@@ -61,6 +69,9 @@ void GameScene::Update() {
 	} else {
 		viewProjection_.UpdateMatrix();
 	}
+
+
+
 }
 
 void GameScene::Draw() {
@@ -89,6 +100,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	modelSkydome_->Draw(viewProjection_);
 
 	player_->Draw(viewProjection_);
 
