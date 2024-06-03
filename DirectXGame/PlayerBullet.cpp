@@ -17,9 +17,7 @@ void PlayerBullet::Init(Model *model , const Vector3 &pos , const Vector3& veloc
 }
 
 void PlayerBullet::Update() {
-	worldTransform_.translation_.x += velocity_.x;
-	worldTransform_.translation_.y += velocity_.y;
-	worldTransform_.translation_.z += velocity_.z;
+	worldTransform_.translation_ = Add(worldTransform_.translation_ , velocity_);
 
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;

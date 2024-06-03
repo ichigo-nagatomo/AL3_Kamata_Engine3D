@@ -4,6 +4,7 @@
 #include <assert.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <cmath>
 
 Vector3 Vector3Add(const Vector3 &v1 , const Vector3 &v2);
 
@@ -23,3 +24,5 @@ Vector3 Subtract(const Vector3 &v1 , const Vector3 &v2);
 
 //スカラー倍
 Vector3 MultiplyVec3(float scaler , const Vector3 &v);
+
+Matrix4x4 Inverse(const Matrix4x4 &matrix);

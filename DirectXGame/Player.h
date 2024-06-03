@@ -14,7 +14,7 @@ public:
 	~Player();
 
 	//初期化
-	void Init(Model *model , uint32_t textureHandle);
+	void Init(Model *model , uint32_t textureHandle, Vector3 pos);
 
 	//更新
 	void Update();
@@ -30,6 +30,9 @@ public:
 
 	void OnCollision();
 	const std::list<PlayerBullet *> &GetBullets() const { return bullets_; }
+
+
+	void SetParent(const WorldTransform *parent);
 
 private:
 	WorldTransform worldTransform_;

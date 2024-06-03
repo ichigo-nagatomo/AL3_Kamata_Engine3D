@@ -14,7 +14,7 @@ Player::~Player() {
 	}
 }
 
-void Player::Init(Model *model , uint32_t textureHandle) {
+void Player::Init(Model *model , uint32_t textureHandle, Vector3 playerPos) {
 	assert(model);
 
 	model_ = model;
@@ -25,7 +25,7 @@ void Player::Init(Model *model , uint32_t textureHandle) {
 	//シングルトンインスタンスを取得する
 	input_ = Input::GetInstance();
 
-	worldTransform_.translation_ = {0.0f, 0.0f, -10.0f};
+	worldTransform_.translation_ = playerPos;
 
 	radius_ = 1.5f;
 }
@@ -110,7 +110,7 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity , worldTransform_.matWorld_);
 
 		PlayerBullet *newBullet = new PlayerBullet();
-		newBullet->Init(model_ , worldTransform_.translation_, velocity);
+		newBullet->Init(model_ , GetWorldPos() , velocity);
 
 		bullets_.push_back(newBullet);
 	}
@@ -142,4 +142,8 @@ void Player::Draw(ViewProjection& viewProjection) {
 
 void Player::OnCollision() {
 	
+}
+
+void Player::SetParent(const WorldTransform *parent) {
+	worldTransform_.parent_ = parent;
 }
