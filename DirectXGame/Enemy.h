@@ -3,6 +3,8 @@
 #include "WorldTransform.h"
 #include "EnemyBullet.h"
 
+class GameScene;
+
 class Player;
 
 enum class Phase {
@@ -16,7 +18,7 @@ public:
 
 	~Enemy();
 
-	void Init(Model *model);
+	void Init(Model *model, Vector3 pos);
 
 	void Update();
 
@@ -35,8 +37,12 @@ public:
 	float GetRadius() { return radius_; }
 
 	void OnCollision();
-	const std::list<EnemyBullet *> &GetBullets() const { return bullets_; }
+	bool IsDead() const { return isDead_; }
+
+	void SetGameScene(GameScene *gameScene) { gameScene_ = gameScene; }
 private:
+	GameScene *gameScene_ = nullptr;
+
 	WorldTransform worldTransform_;
 
 	float radius_;
@@ -47,13 +53,13 @@ private:
 
 	Phase phase_ = Phase::Approach;
 
-	//弾
-	std::list<EnemyBullet*> bullets_;
+	int32_t isShootTime_ = 60;
 
-	int32_t isShootTime_ = 0;
-
+	/*std::list<EnemyBullet*> enemyBullets_;*/
 
 	Player *player_ = nullptr;
+
+	bool isDead_ = false;
 };
 
 

@@ -2,18 +2,17 @@
 #include "cassert"
 #include "TextureManager.h"
 #include "Player.h"
+#include "GameScene.h"
 
 Enemy::Enemy() {
 
 }
 
 Enemy::~Enemy() {
-	for (EnemyBullet* bullet : bullets_) {
-		delete bullet;
-	}
+	
 }
 
-void Enemy::Init(Model *model) {
+void Enemy::Init(Model *model, Vector3 pos) {
 	assert(model);
 
 	model_ = model;
@@ -21,7 +20,7 @@ void Enemy::Init(Model *model) {
 
 	worldTransform_.Initialize();
 
-	worldTransform_.translation_ = {5.0f, 2.0f, 5.0f};
+	worldTransform_.translation_ = {pos.x, pos.y, pos.z};
 
 	radius_ = 1.5f;
 }
@@ -37,18 +36,7 @@ void Enemy::Update() {
 			/*ApproachInit();*/
 			ApproachUpdate();
 
-			//弾更新
-			for (EnemyBullet* bullet : bullets_) {
-				bullet->Update();
-			}
-
-			bullets_.remove_if([](EnemyBullet *bullet) {
-				if (bullet->IsDead()) {
-					delete bullet;
-					return true;
-				}
-				return false;
-			});
+			
 
 			if (worldTransform_.translation_.z < 0.0f) {
 				/*phase_ = Phase::Leave;*/
@@ -77,8 +65,8 @@ void Enemy::Fire() {
 
 	EnemyBullet *newBullet = new EnemyBullet();
 	newBullet->Init(model_ , worldTransform_.translation_, velocity);
-
-	bullets_.push_back(newBullet);
+	gameScene_->AddEnemyBullet(newBullet);
+	
 	/*if (input_->TriggerKey(DIK_SPACE)) {
 		
 	}*/
@@ -110,13 +98,8 @@ Vector3 Enemy::GetWorldPos() {
 
 void Enemy::Draw(ViewProjection &viewProjection) {
 	model_->Draw(worldTransform_ , viewProjection , textureHandle_);
-
-	//弾描画
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}
 }
 
 void Enemy::OnCollision() {
-	
+	isDead_ = true;
 }
