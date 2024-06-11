@@ -13,7 +13,7 @@ void RailCamara::Init(const Vector3 &pos, const Vector3& radian) {
 
 void RailCamara::Update() {
 	worldTransform_.translation_ = Add(worldTransform_.translation_, {0, 0, 0.01f});
-	/*worldTransform_.rotation_ = Add(worldTransform_.rotation_ , {0, 0.001f, 0});*/
+	worldTransform_.rotation_ = Add(worldTransform_.rotation_ , {0, 0.001f, 0});
 
 	worldTransform_.UpdateMatrix();
 
