@@ -6,6 +6,7 @@
 #include "PlayerBullet.h"
 #include <list>
 #include "Function.h"
+#include "Sprite.h"
 
 class Player {
 public:
@@ -17,7 +18,7 @@ public:
 	void Init(Model *model , uint32_t textureHandle, Vector3 pos);
 
 	//更新
-	void Update();
+	void Update(const ViewProjection &viewProjection);
 
 	//描画
 	void Draw(ViewProjection &viewProjection);
@@ -33,6 +34,10 @@ public:
 
 
 	void SetParent(const WorldTransform *parent);
+
+	void DrawUI();
+
+	Vector3 Get3DReticleWorldPos();
 
 private:
 	WorldTransform worldTransform_;
@@ -51,4 +56,7 @@ private:
 	//弾
 	std::list<PlayerBullet*> bullets_;
 
+	WorldTransform worldTransform3DReticle_;
+
+	Sprite *sprite2DReticle_ = nullptr;
 };

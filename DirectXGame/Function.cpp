@@ -193,3 +193,53 @@ Matrix4x4 Inverse(const Matrix4x4& matrix) {
 
 	return result;
 }
+
+Vector3 MultiplyV2M(const Vector3 &v , const Matrix4x4 &m) {
+	Vector3 result;
+	float w = 1.0f; // 同次座標のw成分を1に設定
+
+	result.x = v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + w * m.m[3][0];
+	result.y = v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + w * m.m[3][1];
+	result.z = v.x * m.m[0][2] + v.y * m.m[1][2] + v.z * m.m[2][2] + w * m.m[3][2];
+
+	return result;
+}
+
+//ビューポート変換行列
+Matrix4x4 MakeViewportMatrix(float left , float top , float width , float height , float minDepth , float maxDepth) {
+	Matrix4x4 matrix;
+	matrix.m[0][0] = width / 2.0f;
+	matrix.m[0][1] = 0.0f;
+	matrix.m[0][2] = 0.0f;
+	matrix.m[0][3] = 0.0f;
+	matrix.m[1][0] = 0.0f;
+	matrix.m[1][1] = -(height / 2.0f);
+	matrix.m[1][2] = 0.0f;
+	matrix.m[1][3] = 0.0f;
+	matrix.m[2][0] = 0.0f;
+	matrix.m[2][1] = 0.0f;
+	matrix.m[2][2] = maxDepth - minDepth;
+	matrix.m[2][3] = 0.0f;
+	matrix.m[3][0] = left + (width / 2.0f);
+	matrix.m[3][1] = top + (height / 2.0f);
+	matrix.m[3][2] = minDepth;
+	matrix.m[3][3] = 1.0f;
+
+	return matrix;
+}
+
+//行列の積
+Matrix4x4 MultiplyM2M(const Matrix4x4 &matrix1 , const Matrix4x4 &matrix2) {
+	Matrix4x4 result;
+
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			result.m[i][j] = 0;
+			for (int k = 0; k < 4; ++k) {
+				result.m[i][j] += matrix1.m[i][k] * matrix2.m[k][j];
+			}
+		}
+	}
+
+	return result;
+}

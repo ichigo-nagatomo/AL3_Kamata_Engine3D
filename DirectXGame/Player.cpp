@@ -2,6 +2,9 @@
 #include "cassert"
 #include "AffineMatrix.h"
 #include "ImGuiManager.h"
+#include "TextureManager.h"
+#include "WinApp.h"
+#include "ViewProjection.h"
 
 
 Player::Player() {
@@ -12,6 +15,7 @@ Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
+	delete sprite2DReticle_;
 }
 
 void Player::Init(Model *model , uint32_t textureHandle, Vector3 playerPos) {
@@ -28,9 +32,17 @@ void Player::Init(Model *model , uint32_t textureHandle, Vector3 playerPos) {
 	worldTransform_.translation_ = playerPos;
 
 	radius_ = 1.5f;
+
+	worldTransform3DReticle_.Initialize();
+
+	uint32_t textureReticle = TextureManager::Load("target.png");
+	sprite2DReticle_ = Sprite::Create(textureReticle ,
+									  {worldTransform3DReticle_.translation_.x, worldTransform3DReticle_.translation_.y} ,
+									  {255, 255, 255, 255} ,
+									  {0.5f, 0.5f});
 }
 
-void Player::Update() {
+void Player::Update(const ViewProjection &viewProjection) {
 	worldTransform_.TransferMatrix();
 
 	//回転
@@ -99,15 +111,43 @@ void Player::Update() {
 	ImGui::SliderFloat3("Player" , (float*)&worldTransform_.translation_.x , -50.0f , 50.0f);
 	ImGui::End();
 
+
+	const float kDistancePlayerTo3DReticle = 50.0f;
+
+	Vector3 offset = {0, 0, 1.0f};
+
+	offset = TransformNormal(offset , worldTransform_.matWorld_);
+
+	offset = MultiplyVec3(kDistancePlayerTo3DReticle, Normalize(offset));
+
+	worldTransform3DReticle_.translation_ = Add(GetWorldPos(), offset);
+
+	worldTransform3DReticle_.UpdateMatrix();
+
+
+	//
+	Vector3 positionReticle = Get3DReticleWorldPos();
+
+	Matrix4x4 matViewport = MakeViewportMatrix(0 , 0 , WinApp::kWindowWidth , WinApp::kWindowHeight , 0 , 1);
+
+	Matrix4x4 matViewProjectionViewport =
+		MultiplyM2M(viewProjection.matView , MultiplyM2M(viewProjection.matProjection , matViewport));
+
+	positionReticle = Transform(positionReticle , matViewProjectionViewport);
+
+	sprite2DReticle_->SetPosition(Vector2(positionReticle.x , positionReticle.y));
 }
 
 void Player::Attack() {
 
 	if (input_->TriggerKey(DIK_SPACE)) {
 		const float kBulletSpeed = 1.0f;
-		Vector3 velocity(0 , 0 , kBulletSpeed);
+		Vector3 velocity;
 
-		velocity = TransformNormal(velocity , worldTransform_.matWorld_);
+		velocity = Subtract(worldTransform3DReticle_.translation_ , GetWorldPos());
+		velocity = MultiplyVec3(kBulletSpeed , Normalize(velocity));
+
+		/*velocity = TransformNormal(velocity , worldTransform_.matWorld_);*/
 
 		PlayerBullet *newBullet = new PlayerBullet();
 		newBullet->Init(model_ , GetWorldPos() , velocity);
@@ -126,8 +166,20 @@ Vector3 Player::GetWorldPos() {
 	return worldPos;
 }
 
+Vector3 Player::Get3DReticleWorldPos() {
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform3DReticle_.matWorld_.m[3][0];
+	worldPos.y = worldTransform3DReticle_.matWorld_.m[3][1];
+	worldPos.z = worldTransform3DReticle_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
 void Player::Draw(ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_ , viewProjection , textureHandle_);
+
+	model_->Draw(worldTransform3DReticle_ , viewProjection);
 
 	//弾描画
 	for (PlayerBullet* bullet : bullets_) {
@@ -138,6 +190,10 @@ void Player::Draw(ViewProjection& viewProjection) {
 #ifdef _DEBUG
 	
 #endif
+}
+
+void Player::DrawUI() {
+	sprite2DReticle_->Draw();
 }
 
 void Player::OnCollision() {

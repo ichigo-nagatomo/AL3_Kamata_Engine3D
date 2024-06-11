@@ -36,6 +36,7 @@ void GameScene::Initialize() {
 	railCamara_ = new RailCamara();
 	railCamara_->Init({0, 0, 0}, {0, 0, 0});
 
+	TextureManager::Load("target.png");
 
 	player_ = new Player();
 	Vector3 playerPos(0 , 0 , 20);
@@ -72,7 +73,7 @@ void GameScene::EnemyInit(Vector3 pos) {
 void GameScene::Update() {
 	modelSkydome_->Update();
 
-	player_->Update();
+	player_->Update(viewProjection_);
 
 	for (Enemy* enemy : enemies_) {
 		if (enemy) {
@@ -240,6 +241,8 @@ void GameScene::Draw() {
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	player_->DrawUI();
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
